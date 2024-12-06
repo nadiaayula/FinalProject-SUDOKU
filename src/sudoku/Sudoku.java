@@ -9,13 +9,12 @@ import javax.swing.*;
 public class Sudoku extends JFrame {
   private static final long serialVersionUID = 1L; // To prevent serial warning
 
-  private int remindingSeconds; // Remaining seconds for the timer
-  private GameBoardPanel board; // The game board panel
-  private final MenuBar menu = new MenuBar(); // The menu bar
-  private final Timer timer; // The timer
-  private final JLabel timerLabel; // Label to display the timer
-  private int level = 0; // Difficulty level (0 = easy, 1 = medium, 2 = hard)
-  
+  private int remindingSeconds;
+  private GameBoardPanel board;
+  private final MenuBar menu = new MenuBar();
+  private final Timer timer;
+  private final JLabel timerLabel;
+  private int level = 0;
 
   // Constructor
   public Sudoku() {
@@ -26,7 +25,6 @@ public class Sudoku extends JFrame {
         remindingSeconds -= 1000;
         updateTimerLabel(remindingSeconds);
       } else {
-        // timer.stop();
         JOptionPane.showMessageDialog(this, "Time's up! Game over.");
       }
     });
@@ -44,7 +42,7 @@ public class Sudoku extends JFrame {
     // Create a label to display the timer
     timerLabel = new JLabel("Timer: " + (remindingSeconds / 1000) + " seconds");
     timerLabel.setHorizontalAlignment(JLabel.CENTER);
-    timerLabel.setFont(new Font("Arial", Font.BOLD, 16)); // Optional: Better styling
+    timerLabel.setFont(new Font("Arial", Font.BOLD, 16));
     cp.add(timerLabel, BorderLayout.NORTH);
 
     // Set up the menu and its actions
@@ -80,19 +78,19 @@ public class Sudoku extends JFrame {
     });
 
     menu.easy.addActionListener(e -> {
-      level = 0; // Set level to easy
+      level = 0;
       remindingSeconds = getTimeForLevel(level);
       updateTimerLabel(remindingSeconds);
     });
 
     menu.medium.addActionListener(e -> {
-      level = 1; // Set level to medium
+      level = 1;
       remindingSeconds = getTimeForLevel(level);
       updateTimerLabel(remindingSeconds);
     });
 
     menu.hard.addActionListener(e -> {
-      level = 2; // Set level to hard
+      level = 2;
       remindingSeconds = getTimeForLevel(level);
       updateTimerLabel(remindingSeconds);
     });
@@ -105,7 +103,7 @@ public class Sudoku extends JFrame {
       // board.setPuzzleSource(1);
     });
 
-    setJMenuBar(menu); // Set the menu bar to the frame
+    setJMenuBar(menu);
   }
 
   // Update the timer label text
