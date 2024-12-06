@@ -1,27 +1,32 @@
 package sudoku;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 /**
  * The main Sudoku program
  */
 public class Sudoku extends JFrame {
-  private static final long serialVersionUID = 1L; // to prevent serial warning
+  private static final long serialVersionUID = 1L; // To prevent serial warning
 
-  private int secondsPassed;
+  private int remindingSeconds;
   private GameBoardPanel board;
   private final MenuBar menu = new MenuBar();
   private final Timer timer;
   private final JLabel timerLabel;
+  private int level = 0;
 
   // Constructor
   public Sudoku() {
-    // Create a timer
-    timer = new Timer(1000, (ActionEvent e) -> {
-      secondsPassed++;
-      updateTimerLabel();
+    // Initialize the timer with a countdown logic
+    remindingSeconds = 6000; // Default is easy level: 60 seconds
+    timer = new Timer(1000, e -> {
+      if (remindingSeconds > 0) {
+        remindingSeconds -= 1000;
+        updateTimerLabel(remindingSeconds);
+      } else {
+        JOptionPane.showMessageDialog(this, "Time's up! Game over.");
+      }
     });
 
     // Initialize the game board
@@ -35,9 +40,9 @@ public class Sudoku extends JFrame {
     cp.add(board, BorderLayout.CENTER);
 
     // Create a label to display the timer
-    timerLabel = new JLabel("Timer: 0 seconds");
+    timerLabel = new JLabel("Timer: " + (remindingSeconds / 1000) + " seconds");
     timerLabel.setHorizontalAlignment(JLabel.CENTER);
-    timerLabel.setFont(new Font("Arial", Font.BOLD, 16)); // Optional: Better styling
+    timerLabel.setFont(new Font("Arial", Font.BOLD, 16));
     cp.add(timerLabel, BorderLayout.NORTH);
 
     // Set up the menu and its actions
@@ -54,7 +59,6 @@ public class Sudoku extends JFrame {
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setTitle("Sudoku");
     setVisible(true);
-
   }
 
   // Set menu bar and configure its actions
@@ -62,48 +66,69 @@ public class Sudoku extends JFrame {
     menu.newGame.addActionListener(e -> {
       System.out.println("masuk 1");
       board.newGame();
-      timerLabel.setText("Timer: 0 seconds");
-      secondsPassed = 0;
-      timer.start();
+      remindingSeconds = getTimeForLevel(level);
+      updateTimerLabel(remindingSeconds);
+      timer.restart(); // Restart the timer
     });
 
     menu.resetGame.addActionListener(e -> {
-      System.out.println("masuk 2");
-      timerLabel.setText("Timer: 0 seconds");
-      secondsPassed = 0;
-      timer.start();
+      board.newGame(); // Reset the game board
+      remindingSeconds = getTimeForLevel(level);
+      updateTimerLabel(remindingSeconds);
+      timer.restart(); // Restart the timer
     });
 
     menu.easy.addActionListener(e -> {
-      int level = 0;
-      // board.setDifficulties(level);
+      level = 0;
+      remindingSeconds = getTimeForLevel(level);
+      updateTimerLabel(remindingSeconds);
     });
+
     menu.medium.addActionListener(e -> {
-      int level = 1;
-      // board.setDifficulties(level);
+      level = 1;
+      remindingSeconds = getTimeForLevel(level);
+      updateTimerLabel(remindingSeconds);
     });
+
     menu.hard.addActionListener(e -> {
-      int level = 2;
-      // board.setDifficulties(level);
+      level = 2;
+      remindingSeconds = getTimeForLevel(level);
+      updateTimerLabel(remindingSeconds);
     });
+
     menu.generator.addActionListener(e -> {
       // board.setPuzzleSource(0);
     });
+
     menu.template.addActionListener(e -> {
       // board.setPuzzleSource(1);
     });
 
-    setJMenuBar(menu); // Set the menu bar to the frame
+    setJMenuBar(menu);
   }
 
   // Update the timer label text
-  private void updateTimerLabel() {
-    timerLabel.setText("Timer: " + secondsPassed + " seconds");
+  private void updateTimerLabel(int remindingSeconds) {
+    timerLabel.setText("Time Remaining: " + (remindingSeconds / 1000) + " seconds");
+  }
+
+  // Get the time in milliseconds for the given level
+  private int getTimeForLevel(int level) {
+    switch (level) {
+      case 0:
+        return 600000;
+      case 1:
+        return 480000;
+      case 2:
+        return 300000;
+      default:
+        return 600000;
+    }
   }
 
   public void resetTimer() {
-    secondsPassed = 0;
-    updateTimerLabel();
+    remindingSeconds = getTimeForLevel(level);
+    updateTimerLabel(remindingSeconds);
     timer.restart();
-}
+  }
 }
