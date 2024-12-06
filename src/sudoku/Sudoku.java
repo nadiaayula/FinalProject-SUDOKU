@@ -12,6 +12,7 @@ public class Sudoku extends JFrame {
   private int remindingSeconds;
   private GameBoardPanel board;
   private JButton btnStart;
+  private JButton btnHint;
   private JButton btnNewGame;
   private JButton btnReset;
   private JPanel btnPanel;
@@ -22,7 +23,8 @@ public class Sudoku extends JFrame {
   private Timer timer;
   private final JLabel timerLabel;
   private int level = 0;
-  private String[] choices = {"Easy", "Medium", "Hard"};
+  private String[] choices = { "Easy", "Medium", "Hard" };
+  private int hintCount;
 
   // Constructor
   public Sudoku() {
@@ -31,17 +33,17 @@ public class Sudoku extends JFrame {
     cp.setLayout(new BorderLayout());
 
     // Initialize the game board and input bar
-    board = new GameBoardPanel(this,timer);
-    btnPanel = new JPanel((new GridLayout(2,1)));
+    board = new GameBoardPanel(this, timer);
+    btnPanel = new JPanel((new GridLayout(2, 1)));
     btnSubPanel1 = new JPanel(new GridLayout());
     btnSubPanel2 = new JPanel(new GridLayout());
 
     // Create button to start game
     btnStart = new JButton("Start Game");
     btnNewGame = new JButton("New Game");
+    btnHint = new JButton("Hint");
     btnReset = new JButton("Reset Timer");
     difficulties = new JComboBox<>(choices);
-
 
     // Initialize the timer outside the listener
     remindingSeconds = 60000; // Default is easy level: 60 seconds
@@ -76,24 +78,38 @@ public class Sudoku extends JFrame {
     board.newGame();
 
     btnStart.addActionListener(e -> {
-        if (!timer.isRunning()) {
-          timer.start();
-        }
+      if (!timer.isRunning()) {
+        timer.start();
+      }
     });
 
     btnNewGame.addActionListener(e -> {
       board.newGame();
+      hintCount = 0;
       remindingSeconds = getTimeForLevel(level);
       updateTimerLabel(remindingSeconds);
       timer.restart(); // Restart the timer
       // harusnya ngacak lagi
     });
 
+    btnHint.addActionListener(e -> {
+      if (hintCount < 3 && board.giveHint()) {
+        hintCount++;
+        if (board.isSolved()) {
+          timer.stop();
+          JOptionPane.showMessageDialog(null, "Congratulations! You've solved the puzzle!");
+        }
+      } else if (hintCount == 3) {
+        JOptionPane.showMessageDialog(null, "You have used all of your hints");
+      }
+    });
+
     btnReset.addActionListener(e -> {
-      board.newGame(); // Reset the game board
+      board.newGame();
       remindingSeconds = getTimeForLevel(level);
       updateTimerLabel(remindingSeconds);
-      timer.restart(); // Restart the timer
+      timer.restart();
+      hintCount = 0;
     });
 
     difficulties.addActionListener(e -> {
@@ -103,12 +119,13 @@ public class Sudoku extends JFrame {
       // Update the timer for the new level
       remindingSeconds = getTimeForLevel(level);
       updateTimerLabel(remindingSeconds);
-      timer.restart();  // Restart the timer to reflect the new difficulty time
+      timer.restart();
 
       // Set the board difficulty
       board.setDifficulties(level);
     });
 
+    btnSubPanel1.add(btnHint, BorderLayout.NORTH);
     btnSubPanel1.add(btnNewGame, BorderLayout.NORTH);
     btnSubPanel1.add(btnStart, BorderLayout.NORTH);
     btnSubPanel1.add(btnReset, BorderLayout.NORTH);
@@ -140,15 +157,17 @@ public class Sudoku extends JFrame {
   public void setMenu(MenuBar menu) {
     menu.newGame.addActionListener(e -> {
       board.newGame();
+      hintCount = 0;
       remindingSeconds = getTimeForLevel(level);
       updateTimerLabel(remindingSeconds);
-      timer.restart(); // Restart the timer
+      timer.restart();
     });
 
     menu.resetGame.addActionListener(e -> {
       remindingSeconds = getTimeForLevel(level);
       updateTimerLabel(remindingSeconds);
-      timer.restart(); // Restart the timer
+      timer.restart();
+      hintCount = 0;
     });
 
     menu.easy.addActionListener(e -> {
