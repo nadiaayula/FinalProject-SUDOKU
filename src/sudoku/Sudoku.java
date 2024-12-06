@@ -20,6 +20,7 @@ public class Sudoku extends JFrame {
   private JComboBox<String> difficulties;
   private final MenuBar menu = new MenuBar();
   private Timer timer;
+  private Mistake mistake;
   private final JLabel timerLabel;
   private int level = 0;
   private String[] choices = { "Easy", "Medium", "Hard" };
@@ -32,8 +33,8 @@ public class Sudoku extends JFrame {
     cp.setLayout(new BorderLayout());
 
     // Initialize the game board and input bar
-    board = new GameBoardPanel(this, timer);
-    btnPanel = new JPanel((new GridLayout(2, 1)));
+    board = new GameBoardPanel(this, timer, mistake);
+    btnPanel = new JPanel(new GridLayout(2, 1));
     btnSubPanel1 = new JPanel(new GridLayout());
     btnSubPanel2 = new JPanel(new GridLayout());
 
@@ -45,8 +46,8 @@ public class Sudoku extends JFrame {
     btnHint.setEnabled(false);
     difficulties = new JComboBox<>(choices);
 
-    // Initialize the timer outside the listener
-    remindingSeconds = 600000; // Default is easy level: 60 seconds
+    mistake = new Mistake(level);
+    remindingSeconds = getTimeForLevel(level);
     timer = new Timer(1000, f -> {
       if (remindingSeconds > 0) {
         remindingSeconds -= 1000;
@@ -72,7 +73,7 @@ public class Sudoku extends JFrame {
       }
     });
 
-    board = new GameBoardPanel(this, timer);
+    board = new GameBoardPanel(this, timer, mistake);
 
     // Start a new game
     board.newGame();
@@ -119,6 +120,7 @@ public class Sudoku extends JFrame {
 
       // Set the board difficulty
       board.setDifficulties(level);
+      mistake.resetMaxMistakes(level);
 
       board.setNumbersSource(level);
     });
@@ -127,6 +129,7 @@ public class Sudoku extends JFrame {
     btnSubPanel1.add(btnStart, BorderLayout.NORTH);
     btnSubPanel1.add(btnNewGame, BorderLayout.NORTH);
     btnSubPanel2.add(difficulties, BorderLayout.NORTH);
+    btnSubPanel2.add(mistake, BorderLayout.NORTH);
     btnPanel.add(btnSubPanel1);
     btnPanel.add(btnSubPanel2);
     cp.add(btnPanel, BorderLayout.SOUTH);
