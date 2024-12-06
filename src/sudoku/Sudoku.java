@@ -41,8 +41,11 @@ public class Sudoku extends JFrame {
     // Create button to start game
     btnStart = new JButton("Start Game");
     btnNewGame = new JButton("New Game");
+    btnNewGame.setEnabled(false);
     btnHint = new JButton("Hint");
+    btnHint.setEnabled(false);
     btnReset = new JButton("Reset Timer");
+    btnReset.setEnabled(false);
     difficulties = new JComboBox<>(choices);
 
     // Initialize the timer outside the listener
@@ -78,6 +81,9 @@ public class Sudoku extends JFrame {
     board.newGame();
 
     btnStart.addActionListener(e -> {
+      btnHint.setEnabled(true);
+      btnNewGame.setEnabled(true);
+      btnReset.setEnabled(true);
       if (!timer.isRunning()) {
         timer.start();
       }
@@ -88,8 +94,10 @@ public class Sudoku extends JFrame {
       hintCount = 0;
       remindingSeconds = getTimeForLevel(level);
       updateTimerLabel(remindingSeconds);
-      timer.restart(); // Restart the timer
-      // harusnya ngacak lagi
+      timer.restart();
+      btnHint.setEnabled(true);
+      btnNewGame.setEnabled(true);
+      btnReset.setEnabled(true);
     });
 
     btnHint.addActionListener(e -> {
@@ -100,6 +108,7 @@ public class Sudoku extends JFrame {
           JOptionPane.showMessageDialog(null, "Congratulations! You've solved the puzzle!");
         }
       } else if (hintCount == 3) {
+        btnHint.setEnabled(false);
         JOptionPane.showMessageDialog(null, "You have used all of your hints");
       }
     });
@@ -110,6 +119,9 @@ public class Sudoku extends JFrame {
       updateTimerLabel(remindingSeconds);
       timer.restart();
       hintCount = 0;
+      btnHint.setEnabled(true);
+      btnNewGame.setEnabled(true);
+      btnReset.setEnabled(true);
     });
 
     difficulties.addActionListener(e -> {
