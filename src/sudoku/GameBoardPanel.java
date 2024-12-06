@@ -154,14 +154,27 @@ public class GameBoardPanel extends JPanel {
         // Debugging: Cetak angka yang dimasukkan
         System.out.println("You entered " + numberIn);
 
-        /*
-         * [TODO 5] (later - after TODO 3 and 4)
-         * Check the numberIn against sourceCell.number.
-         * Update the cell status sourceCell.status,
-         * and re-paint the cell via sourceCell.paint().
-         */
+        for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
+          for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
+            Cell cell = cells[row][col];
+            if (cell.status == CellStatus.CORRECT_GUESS && cell != sourceCell) {
+              cell.status = CellStatus.GIVEN;
+              cell.paint();
+            }
+            cell.resetHighlight();
+          }
+        }
+
         if (numberIn == sourceCell.number) {
           sourceCell.status = CellStatus.CORRECT_GUESS;
+          for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
+            for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
+              Cell cell = cells[row][col];
+              if (cell.status == CellStatus.GIVEN && cell.number == numberIn) {
+                cell.highlight();
+              }
+            }
+          }
         } else {
           sourceCell.status = CellStatus.WRONG_GUESS;
         }
@@ -239,7 +252,8 @@ public class GameBoardPanel extends JPanel {
   public void setDifficulties(int difficulties) {
     this.difficulties = difficulties;
   }
-  public void setNumbersSource(int numbersSource){
-      this.numbersSource = numbersSource;
+
+  public void setNumbersSource(int numbersSource) {
+    this.numbersSource = numbersSource;
   }
 }

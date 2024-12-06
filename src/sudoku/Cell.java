@@ -14,12 +14,13 @@ public class Cell extends JTextField {
 
     // Define named constants for JTextField's colors and fonts
     //  to be chosen based on CellStatus
-    public static final Color BG_GIVEN = new Color(29,53,87); // RGB
-    public static final Color FG_GIVEN = new Color(241, 250, 238);
-    public static final Color FG_NOT_GIVEN = new Color(45,30,47);
-    public static final Color BG_TO_GUESS  = new Color(69, 123, 157);
-    public static final Color BG_CORRECT_GUESS = new Color(168, 218, 220);
-    public static final Color BG_WRONG_GUESS   = new Color(230, 57, 70);
+    public static final Color BG_GIVEN = new Color(0, 102, 102);
+    public static final Color FG_GIVEN = new Color(224, 255, 255);
+    public static final Color FG_NOT_GIVEN = new Color(0, 51, 51);
+    public static final Color BG_TO_GUESS = new Color(0, 153, 153);
+    public static final Color BG_CORRECT_GUESS = new Color(102, 255, 204);
+    public static final Color BG_WRONG_GUESS = new Color(255, 51, 51);
+    public static final Color BG_HIGHLIGHT = new Color(0, 180, 128);
     public static final Font FONT_NUMBERS = new Font("Rubik", Font.PLAIN, 28);
 
     // Define properties (package-visible)
@@ -75,6 +76,7 @@ public class Cell extends JTextField {
             super.setBackground(BG_TO_GUESS);
             super.setForeground(FG_NOT_GIVEN);
         } else if (status == CellStatus.CORRECT_GUESS) {  // from TO_GUESS
+            super.setText(number + "");
             super.setBackground(BG_CORRECT_GUESS);
             super.setForeground(BG_GIVEN);
             super.setEditable(false);
@@ -83,5 +85,18 @@ public class Cell extends JTextField {
             super.setBackground(BG_WRONG_GUESS);
             SoundEffect.WRONG.play();
         }
+    }
+
+/*************  ✨ Codeium Command ⭐  *************/
+    /**
+     * Set the background color to highlight this cell.
+     */
+/******  106a88c9-d4c5-468a-8782-13d5f7905d8c  *******/
+    public void highlight() {
+        super.setBackground(BG_HIGHLIGHT);
+    }
+
+    public void resetHighlight() {
+        paint();
     }
 }
