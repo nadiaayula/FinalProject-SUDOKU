@@ -1,3 +1,4 @@
+package sudoku;
 /**
  * Define the named constants used in many classes.
  */

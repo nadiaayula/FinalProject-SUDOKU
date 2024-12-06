@@ -1,5 +1,8 @@
+package sudoku;
 import java.awt.Color;
 import java.awt.Font;
+
+import javax.swing.BorderFactory;
 import javax.swing.JTextField;
 /**
  * The Cell class model the cells of the Sudoku puzzle, by customizing (subclass)
@@ -34,6 +37,16 @@ public class Cell extends JTextField {
         // Inherited from JTextField: Beautify all the cells once for all
         super.setHorizontalAlignment(JTextField.CENTER);
         super.setFont(FONT_NUMBERS);
+        setCellBorder(row, col);
+    }
+
+    private void setCellBorder(int row, int col) {
+        int top = (row % 3 == 0) ? 3 : 1;
+        int left = (col % 3 == 0) ? 3 : 1;
+        int bottom = (row % 3 == 2) ? 3 : 1;
+        int right = (col % 3 == 2) ? 3 : 1;
+
+        setBorder(BorderFactory.createMatteBorder(top, left, bottom, right, Color.BLACK));
     }
 
     /** Reset this cell for a new game, given the puzzle number and isGiven */
@@ -61,8 +74,10 @@ public class Cell extends JTextField {
             super.setBackground(BG_CORRECT_GUESS);
             super.setForeground(FG_GIVEN);
             super.setEditable(false);
+            SoundEffect.CORRECT.play();
         } else if (status == CellStatus.WRONG_GUESS) {    // from TO_GUESS
             super.setBackground(BG_WRONG_GUESS);
+            SoundEffect.WRONG.play();
         }
     }
 }
