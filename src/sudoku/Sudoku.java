@@ -50,6 +50,7 @@ public class Sudoku extends JFrame {
         remindingSeconds -= 1000;
         updateTimerLabel(remindingSeconds);
       } else {
+        SoundEffect.WRONG.play();
         int choice = JOptionPane.showOptionDialog(
             this,
             "Time's up! Game over.\nWould you like to restart the game?",
@@ -145,7 +146,6 @@ public class Sudoku extends JFrame {
     });
 
     menu.resetGame.addActionListener(e -> {
-      board.newGame(); // Reset the game board
       remindingSeconds = getTimeForLevel(level);
       updateTimerLabel(remindingSeconds);
       timer.restart(); // Restart the timer

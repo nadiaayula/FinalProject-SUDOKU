@@ -20,7 +20,8 @@ public class GameBoardPanel extends JPanel {
     private Cell[][] cells = new Cell[SudokuConstants.GRID_SIZE][SudokuConstants.GRID_SIZE];
     /** It also contains a Puzzle with array numbers and isGiven */
     private Puzzle puzzle = new Puzzle();
-    private int difficulties = 0;
+    private int difficulties = 2;
+    private int numbersSource = 0;
 
     // timer
     private Timer timer;
@@ -99,7 +100,7 @@ public class GameBoardPanel extends JPanel {
     public void newGame() {
         // Generate a new puzzle
 
-        puzzle.newPuzzle(2);
+        puzzle.newPuzzle(difficulties, numbersSource);
 
         // Initialize all the 9x9 cells, based on the puzzle.
         for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
