@@ -96,82 +96,7 @@ public class GameBoardPanel extends JPanel {
     for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
       for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
         if (cells[row][col].status == CellStatus.TO_GUESS || cells[row][col].status == CellStatus.WRONG_GUESS) {
-          timer.stop();
           return false;
-
-     // [TODO 2] Define a Listener Inner Class for all the editable Cells
-    // .........
-    private class CellInputListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            // Get a reference of the JTextField that triggers this action event
-            Cell sourceCell = (Cell) e.getSource();
-
-            try {
-                String input = sourceCell.getText().trim();
-                if(input.length() !=1 || !Character.isDigit(input.charAt(0))){
-                    throw new NumberFormatException("Input must be a single digit.");
-                }
-                // Retrieve the int entered
-                int numberIn = Integer.parseInt(sourceCell.getText());
-                // For debugging
-                System.out.println("You entered " + numberIn);
-
-                /*
-                 * [TODO 5] (later - after TODO 3 and 4)
-                 * Check the numberIn against sourceCell.number.
-                 * Update the cell status sourceCell.status,
-                 * and re-paint the cell via sourceCell.paint().
-                 */
-                if (numberIn == sourceCell.number) {
-                    sourceCell.status = CellStatus.CORRECT_GUESS;
-                } else {
-                    sourceCell.status = CellStatus.WRONG_GUESS;
-                }
-                sourceCell.paint(); // re-paint this cell based on its status
-
-                /*
-                 * [TODO 6] (later)
-                 * Check if the player has solved the puzzle after this move,
-                 * by calling isSolved(). Put up a congratulation JOptionPane, if so.
-                 */
-                if (isSolved()) {
-                    SoundEffect.WIN.play();
-                    showCompletionDialog();
-                }
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Invalid input! Please enter a single digit (0-9).",
-                        "Invalid Input",
-                        JOptionPane.WARNING_MESSAGE
-                );
-                sourceCell.setText("");
-            }
-        }
-
-        private void showCompletionDialog() {
-            // Opsi untuk dialog
-            Object[] options = {"Restart", "Quit"};
-    
-            int choice = JOptionPane.showOptionDialog(
-                null,
-                "Congratulations! You've solved the puzzle.\nWhat would you like to do next?",
-                "Puzzle Solved",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null,
-                options,
-                options[0] // Default pilihan
-            );
-
-            if (choice == JOptionPane.YES_OPTION) {
-                // Restart permainan baru
-                newGame();
-            } else if (choice == JOptionPane.NO_OPTION) {
-                // Keluar dari aplikasi
-                System.exit(0);
-            }
         }
       }
     }
@@ -180,39 +105,53 @@ public class GameBoardPanel extends JPanel {
 
   // [TODO 2] Define a Listener Inner Class for all the editable Cells
   // .........
-  private class CellInputListener implements ActionListener {
+  class CellInputListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
       // Get a reference of the JTextField that triggers this action event
       Cell sourceCell = (Cell) e.getSource();
 
-      // Retrieve the int entered
-      int numberIn = Integer.parseInt(sourceCell.getText());
-      // For debugging
-      System.out.println("You entered " + numberIn);
+      try {
+        String input = sourceCell.getText().trim();
+        if (input.length() != 1 || !Character.isDigit(input.charAt(0))) {
+          throw new NumberFormatException("Input must be a single digit.");
+        }
+        // Retrieve the int entered
+        int numberIn = Integer.parseInt(sourceCell.getText());
+        // For debugging
+        System.out.println("You entered " + numberIn);
 
-      /*
-       * [TODO 5] (later - after TODO 3 and 4)
-       * Check the numberIn against sourceCell.number.
-       * Update the cell status sourceCell.status,
-       * and re-paint the cell via sourceCell.paint().
-       */
-      if (numberIn == sourceCell.number) {
-        sourceCell.status = CellStatus.CORRECT_GUESS;
-      } else {
-        sourceCell.status = CellStatus.WRONG_GUESS;
-      }
-      sourceCell.paint(); // re-paint this cell based on its status
+        /*
+         * [TODO 5] (later - after TODO 3 and 4)
+         * Check the numberIn against sourceCell.number.
+         * Update the cell status sourceCell.status,
+         * and re-paint the cell via sourceCell.paint().
+         */
+        if (numberIn == sourceCell.number) {
+          sourceCell.status = CellStatus.CORRECT_GUESS;
+        } else {
+          sourceCell.status = CellStatus.WRONG_GUESS;
+        }
+        sourceCell.paint(); // re-paint this cell based on its status
 
-      /*
-       * [TODO 6] (later)
-       * Check if the player has solved the puzzle after this move,
-       * by calling isSolved(). Put up a congratulation JOptionPane, if so.
-       */
-      if (isSolved()) {
-        SoundEffect.WIN.play();
-        showCompletionDialog();
+        /*
+         * [TODO 6] (later)
+         * Check if the player has solved the puzzle after this move,
+         * by calling isSolved(). Put up a congratulation JOptionPane, if so.
+         */
+        if (isSolved()) {
+          SoundEffect.WIN.play();
+          showCompletionDialog();
+        }
+      } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(
+            null,
+            "Invalid input! Please enter a single digit (0-9).",
+            "Invalid Input",
+            JOptionPane.WARNING_MESSAGE);
+        sourceCell.setText("");
       }
+
     }
 
     private void showCompletionDialog() {
@@ -238,6 +177,5 @@ public class GameBoardPanel extends JPanel {
         System.exit(0);
       }
     }
-
   }
 }
