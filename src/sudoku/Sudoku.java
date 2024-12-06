@@ -28,6 +28,32 @@ public class Sudoku extends JFrame {
 
   // Constructor
   public Sudoku() {
+    ImageIcon icon = new ImageIcon("src/sudoku/images/sudokuicon.png");
+    Image sclImage = icon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+    ImageIcon welcomeImg = new ImageIcon(sclImage);
+    JOptionPane.showMessageDialog(
+            null,
+            "<html>" +
+                    "<body style='font-family: Rubik; color: #333;'>" +
+                    "<h1 style='text-align: center; color: #006666;'>Welcome to Sudoku!</h1>" +
+                    "<p style='font-size: 14px; line-height: 1.5; color: #555;'>Solve the puzzle by filling the grid with numbers from 1 to 9.<br>" +
+                    "Remember, each number must appear only once per row, column, and 3x3 box.</p>" +
+                    "<h2 style='margin-bottom: 5px; color: #006666;'>Game Levels:</h2>" +
+                    "<ul style='margin-top: 0px; padding-left: 20px; color: #000;'>" +
+                    "<li><b>Easy</b>: <span style='color: #008000;'>600 seconds</span> to complete</li>" +
+                    "<li><b>Medium</b>: <span style='color: #FF8C00;'>480 seconds</span> to complete</li>" +
+                    "<li><b>Hard</b>: <span style='color: #FF0000;'>300 seconds</span> to complete</li>" +
+                    "</ul>" +
+                    "<p style='font-size: 14px; line-height: 1.5; color: #555;'>The board will be randomly generated based on the level you choose.<br>" +
+                    "<p style='font-size: 14px; line-height: 1.5; color: #555;'><b>Don't forget to click the <span style='color: #006666;'>Start Game</span> button to begin!</b></p>" +
+                    "Good luck and have fun!</p>" +
+                    "</body>" +
+                    "</html>",
+            "Welcome!",
+            JOptionPane.INFORMATION_MESSAGE,
+            welcomeImg
+    );
+
     // Configure JFrame
     Container cp = getContentPane();
     cp.setLayout(new BorderLayout());
