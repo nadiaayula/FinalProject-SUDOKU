@@ -239,7 +239,8 @@ public class GameBoardPanel extends JPanel {
   public void setDifficulties(int difficulties) {
     this.difficulties = difficulties;
   }
-  public void setNumbersSource(int numbersSource){
-      this.numbersSource = numbersSource;
+
+  public void setNumbersSource(int numbersSource) {
+    this.numbersSource = numbersSource;
   }
 }
