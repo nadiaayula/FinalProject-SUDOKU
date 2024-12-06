@@ -11,30 +11,96 @@ public class Sudoku extends JFrame {
 
   private int remindingSeconds;
   private GameBoardPanel board;
+  private JButton btnStart;
+  private JButton btnNewGame;
+  private JButton btnReset;
+  private JPanel btnPanel;
+  private JPanel btnSubPanel1;
+  private JPanel btnSubPanel2;
+  private JComboBox<String> difficulties;
   private final MenuBar menu = new MenuBar();
-  private final Timer timer;
+  private Timer timer;
   private final JLabel timerLabel;
   private int level = 0;
+  private String[] choices = {"Easy", "Medium", "Hard"};
 
   // Constructor
   public Sudoku() {
-    // Initialize the timer with a countdown logic
-    remindingSeconds = 6000; // Default is easy level: 60 seconds
-    timer = new Timer(1000, e -> {
+    // Configure JFrame
+    Container cp = getContentPane();
+    cp.setLayout(new BorderLayout());
+
+    // Initialize the game board and input bar
+    board = new GameBoardPanel(this,timer);
+    btnPanel = new JPanel((new GridLayout(2,1)));
+    btnSubPanel1 = new JPanel(new GridLayout());
+    btnSubPanel2 = new JPanel(new GridLayout());
+
+    // Create button to start game
+    btnStart = new JButton("Start Game");
+    btnNewGame = new JButton("New Game");
+    btnReset = new JButton("Reset Timer");
+    difficulties = new JComboBox<>(choices);
+
+
+    // Initialize the timer outside the listener
+    remindingSeconds = 60000; // Default is easy level: 60 seconds
+    timer = new Timer(1000, f -> {
       if (remindingSeconds > 0) {
         remindingSeconds -= 1000;
         updateTimerLabel(remindingSeconds);
       } else {
         JOptionPane.showMessageDialog(this, "Time's up! Game over.");
+        timer.stop();
       }
     });
 
-    // Initialize the game board
     board = new GameBoardPanel(this, timer);
 
-    // Configure JFrame
-    Container cp = getContentPane();
-    cp.setLayout(new BorderLayout());
+    // Start a new game
+    board.newGame();
+
+    btnStart.addActionListener(e -> {
+        if (!timer.isRunning()) {
+          timer.start();
+        }
+    });
+
+    btnNewGame.addActionListener(e -> {
+      board.newGame();
+      remindingSeconds = getTimeForLevel(level);
+      updateTimerLabel(remindingSeconds);
+      timer.restart(); // Restart the timer
+      // harusnya ngacak lagi
+    });
+
+    btnReset.addActionListener(e -> {
+      board.newGame(); // Reset the game board
+      remindingSeconds = getTimeForLevel(level);
+      updateTimerLabel(remindingSeconds);
+      timer.restart(); // Restart the timer
+    });
+
+    difficulties.addActionListener(e -> {
+      JComboBox<String> choice = (JComboBox<String>) e.getSource();
+      int difficulties = choice.getSelectedIndex();
+
+      // Update the timer for the new level
+      remindingSeconds = getTimeForLevel(level);
+      updateTimerLabel(remindingSeconds);
+      timer.restart();  // Restart the timer to reflect the new difficulty time
+
+      // Set the board difficulty
+      board.setDifficulties(level);
+    });
+
+    btnSubPanel1.add(btnNewGame, BorderLayout.NORTH);
+    btnSubPanel1.add(btnStart, BorderLayout.NORTH);
+    btnSubPanel1.add(btnReset, BorderLayout.NORTH);
+    btnSubPanel2.add(difficulties, BorderLayout.NORTH);
+    btnPanel.add(btnSubPanel1);
+    btnPanel.add(btnSubPanel2);
+    cp.add(btnPanel, BorderLayout.SOUTH);
 
     // Add the game board to the center
     cp.add(board, BorderLayout.CENTER);
@@ -48,12 +114,6 @@ public class Sudoku extends JFrame {
     // Set up the menu and its actions
     setMenu(menu);
 
-    // Start a new game
-    board.newGame();
-
-    // Start the timer
-    timer.start();
-
     // Pack and finalize UI setup
     pack();
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,7 +124,6 @@ public class Sudoku extends JFrame {
   // Set menu bar and configure its actions
   public void setMenu(MenuBar menu) {
     menu.newGame.addActionListener(e -> {
-      System.out.println("masuk 1");
       board.newGame();
       remindingSeconds = getTimeForLevel(level);
       updateTimerLabel(remindingSeconds);
@@ -82,18 +141,21 @@ public class Sudoku extends JFrame {
       level = 0;
       remindingSeconds = getTimeForLevel(level);
       updateTimerLabel(remindingSeconds);
+      board.setDifficulties(level);
     });
 
     menu.medium.addActionListener(e -> {
       level = 1;
       remindingSeconds = getTimeForLevel(level);
       updateTimerLabel(remindingSeconds);
+      board.setDifficulties(level);
     });
 
     menu.hard.addActionListener(e -> {
       level = 2;
       remindingSeconds = getTimeForLevel(level);
       updateTimerLabel(remindingSeconds);
+      board.setDifficulties(level);
     });
 
     menu.generator.addActionListener(e -> {
@@ -116,13 +178,13 @@ public class Sudoku extends JFrame {
   private int getTimeForLevel(int level) {
     switch (level) {
       case 0:
-        return 600000;
+        return 60000;
       case 1:
-        return 480000;
+        return 48000;
       case 2:
-        return 300000;
+        return 30000;
       default:
-        return 600000;
+        return 60000;
     }
   }
 

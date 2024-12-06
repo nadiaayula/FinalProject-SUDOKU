@@ -20,14 +20,28 @@ public class GameBoardPanel extends JPanel {
     private Cell[][] cells = new Cell[SudokuConstants.GRID_SIZE][SudokuConstants.GRID_SIZE];
     /** It also contains a Puzzle with array numbers and isGiven */
     private Puzzle puzzle = new Puzzle();
+    private int difficulties = 0;
 
     // timer
     private Timer timer;
     private JLabel timerLabel;
+    private JButton btnStart;
 
     /** Constructor */
     public GameBoardPanel(Sudoku sudoku, Timer timer) {
         super.setLayout(new GridLayout(SudokuConstants.GRID_SIZE, SudokuConstants.GRID_SIZE)); // JPanel
+        // If timer is null, create a default one
+        if (timer == null) {
+            this.timer = new Timer(1000, e -> {
+                // Handle timer events here if necessary
+            });
+        } else {
+            this.timer = timer;
+        }
+
+        // Set up the Start button to start the game
+        btnStart = new JButton("Start Game");
+        btnStart.addActionListener(e -> startGame());
 
         // Create a panel for the top area containing inputBar and timerLabel
         JPanel topPanel = new JPanel(new BorderLayout());
@@ -72,6 +86,12 @@ public class GameBoardPanel extends JPanel {
         this.timer = timer;
     }
 
+    // Start a new game
+    public void startGame(){
+        timer.start();
+        newGame();
+    }
+
     /**
      * Generate a new puzzle; and reset the game board of cells based on the puzzle.
      * You can call this method to start a new game.
@@ -90,7 +110,6 @@ public class GameBoardPanel extends JPanel {
 
         // Reset timer display
         timerLabel.setText("Timer: 0 seconds");
-        timer.start();
     }
 
     /**
@@ -189,5 +208,8 @@ public class GameBoardPanel extends JPanel {
                 System.exit(0);
             }
         }
+    }
+    public void setDifficulties(int difficulties) {
+        this.difficulties = difficulties;
     }
 }
