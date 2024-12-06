@@ -87,9 +87,6 @@ public class Cell extends JTextField {
       super.setEditable(false);
       SoundEffect.CORRECT.play();
     } else if (status == CellStatus.WRONG_GUESS) { // from TO_GUESS
-      if (mistake != null) {
-        mistake.increment(); 
-      }
       super.setBackground(BG_WRONG_GUESS);
       SoundEffect.WRONG.play();
     }

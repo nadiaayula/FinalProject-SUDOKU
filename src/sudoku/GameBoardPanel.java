@@ -180,8 +180,11 @@ public class GameBoardPanel extends JPanel {
         } else {
           sourceCell.status = CellStatus.WRONG_GUESS;
         }
-        sourceCell.paint(); // re-paint this cell based on its status
-        System.out.println("Mistake: " + mistake.getMistakes() + "/" + mistake.getMaxMistakes());
+
+        if(sourceCell.status == CellStatus.WRONG_GUESS) {
+          sourceCell.paint();
+          mistake.increment();
+        }
         if (mistake.getMistakes() >= mistake.getMaxMistakes()) {
           SoundEffect.WRONG.play();
           JOptionPane.showMessageDialog(
