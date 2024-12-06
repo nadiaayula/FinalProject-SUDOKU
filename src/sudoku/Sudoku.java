@@ -19,13 +19,30 @@ public class Sudoku extends JFrame {
   // Constructor
   public Sudoku() {
     // Initialize the timer with a countdown logic
-    remindingSeconds = 6000; // Default is easy level: 60 seconds
+    remindingSeconds = 60000;
     timer = new Timer(1000, e -> {
       if (remindingSeconds > 0) {
         remindingSeconds -= 1000;
         updateTimerLabel(remindingSeconds);
       } else {
         JOptionPane.showMessageDialog(this, "Time's up! Game over.");
+        int choice = JOptionPane.showOptionDialog(
+            this,
+            "Time's up! Game over.\nWould you like to restart the game?",
+            "Game Over",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[] { "Restart", "Exit" },
+            "Restart");
+
+        if (choice == JOptionPane.YES_OPTION) {
+          board.newGame();
+          remindingSeconds = getTimeForLevel(level);
+          updateTimerLabel(remindingSeconds);
+        } else {
+          System.exit(0);
+        }
       }
     });
 
