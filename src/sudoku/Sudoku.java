@@ -46,7 +46,7 @@ public class Sudoku extends JFrame {
     difficulties = new JComboBox<>(choices);
 
     // Initialize the timer outside the listener
-    remindingSeconds = 60000; // Default is easy level: 60 seconds
+    remindingSeconds = 600000; // Default is easy level: 60 seconds
     timer = new Timer(1000, f -> {
       if (remindingSeconds > 0) {
         remindingSeconds -= 1000;
@@ -119,6 +119,8 @@ public class Sudoku extends JFrame {
 
       // Set the board difficulty
       board.setDifficulties(level);
+
+      board.setNumbersSource(level);
     });
 
     btnSubPanel1.add(btnHint, BorderLayout.NORTH);
@@ -150,21 +152,6 @@ public class Sudoku extends JFrame {
 
   // Set menu bar and configure its actions
   public void setMenu(MenuBar menu) {
-    menu.newGame.addActionListener(e -> {
-      board.newGame();
-      hintCount = 0;
-      remindingSeconds = getTimeForLevel(level);
-      updateTimerLabel(remindingSeconds);
-      timer.restart();
-    });
-
-    menu.resetGame.addActionListener(e -> {
-      remindingSeconds = getTimeForLevel(level);
-      updateTimerLabel(remindingSeconds);
-      timer.restart();
-      hintCount = 0;
-    });
-
     menu.easy.addActionListener(e -> {
       level = 0;
       remindingSeconds = getTimeForLevel(level);
@@ -184,14 +171,6 @@ public class Sudoku extends JFrame {
       remindingSeconds = getTimeForLevel(level);
       updateTimerLabel(remindingSeconds);
       board.setDifficulties(level);
-    });
-
-    menu.generator.addActionListener(e -> {
-      // board.setPuzzleSource(0);
-    });
-
-    menu.template.addActionListener(e -> {
-      // board.setPuzzleSource(1);
     });
 
     setJMenuBar(menu);

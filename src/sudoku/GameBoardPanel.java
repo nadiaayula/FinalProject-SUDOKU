@@ -22,7 +22,7 @@ public class GameBoardPanel extends JPanel {
   private Cell[][] cells = new Cell[SudokuConstants.GRID_SIZE][SudokuConstants.GRID_SIZE];
   /** It also contains a Puzzle with array numbers and isGiven */
   private Puzzle puzzle = new Puzzle();
-  private int difficulties = 2;
+  private int difficulties = 0;
   private int numbersSource = 0;
 
   // timer
@@ -238,5 +238,8 @@ public class GameBoardPanel extends JPanel {
 
   public void setDifficulties(int difficulties) {
     this.difficulties = difficulties;
+  }
+  public void setNumbersSource(int numbersSource){
+      this.numbersSource = numbersSource;
   }
 }
