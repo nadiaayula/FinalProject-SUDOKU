@@ -51,7 +51,6 @@ public class Sudoku extends JFrame {
         updateTimerLabel(remindingSeconds);
       } else {
         JOptionPane.showMessageDialog(this, "Time's up! Game over.");
-        timer.stop();
       }
     });
 
