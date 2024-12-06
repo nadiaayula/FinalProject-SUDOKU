@@ -18,20 +18,18 @@ public class GameBoardPanel extends JPanel {
   // Board width/height in pixels
 
   // Define properties
-  /** The game board composes of 9x9 Cells (customized JTextFields) */
   private Cell[][] cells = new Cell[SudokuConstants.GRID_SIZE][SudokuConstants.GRID_SIZE];
-  /** It also contains a Puzzle with array numbers and isGiven */
   private Puzzle puzzle = new Puzzle();
-  private int difficulties = 2;
+  private int difficulties = 0;
   private int numbersSource = 0;
-
-  // timer
+  private Mistake mistake;
   private Timer timer;
   private JLabel timerLabel;
   private JButton btnStart;
 
   /** Constructor */
-  public GameBoardPanel(Sudoku sudoku, Timer timer) {
+  public GameBoardPanel(Sudoku sudoku, Timer timer, Mistake mistake) {
+    this.mistake = mistake;
     super.setLayout(new GridLayout(SudokuConstants.GRID_SIZE, SudokuConstants.GRID_SIZE)); // JPanel
     // If timer is null, create a default one
     if (timer == null) {
@@ -55,7 +53,7 @@ public class GameBoardPanel extends JPanel {
     // Allocate the 2D array of Cell, and added into JPanel.
     for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
       for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
-        cells[row][col] = new Cell(row, col);
+        cells[row][col] = new Cell(row, col, mistake);
         super.add(cells[row][col]); // JPanel
       }
     }
@@ -91,6 +89,7 @@ public class GameBoardPanel extends JPanel {
 
   // Start a new game
   public void startGame() {
+    mistake.reset();
     timer.start();
     newGame();
   }
@@ -101,7 +100,6 @@ public class GameBoardPanel extends JPanel {
    */
   public void newGame() {
     // Generate a new puzzle
-
     puzzle.newPuzzle(difficulties, numbersSource);
 
     // Initialize all the 9x9 cells, based on the puzzle.
@@ -113,6 +111,7 @@ public class GameBoardPanel extends JPanel {
 
     // Reset timer display
     timerLabel.setText("Timer: 0 seconds");
+    mistake.reset();
   }
 
   /**
@@ -127,6 +126,7 @@ public class GameBoardPanel extends JPanel {
         }
       }
     }
+    mistake.reset();
     return true;
   }
 
@@ -160,12 +160,22 @@ public class GameBoardPanel extends JPanel {
          * Update the cell status sourceCell.status,
          * and re-paint the cell via sourceCell.paint().
          */
+
         if (numberIn == sourceCell.number) {
           sourceCell.status = CellStatus.CORRECT_GUESS;
         } else {
           sourceCell.status = CellStatus.WRONG_GUESS;
         }
         sourceCell.paint(); // re-paint this cell based on its status
+        if (mistake.getMistakes() == mistake.getMaxMistakes()) {
+          SoundEffect.WRONG.play();
+          JOptionPane.showMessageDialog(
+              null,
+              "You have made too many mistakes! Game over.",
+              "Game Over",
+              JOptionPane.WARNING_MESSAGE);
+          System.exit(0);
+        }
 
         /*
          * [TODO 6] (later)
@@ -204,7 +214,7 @@ public class GameBoardPanel extends JPanel {
 
       if (choice == JOptionPane.YES_OPTION) {
         // Restart permainan baru
-        sudoku.resetTimer();
+        // sudoku.resetTimer();
         newGame();
       } else if (choice == JOptionPane.NO_OPTION) {
         // Keluar dari aplikasi
@@ -238,5 +248,9 @@ public class GameBoardPanel extends JPanel {
 
   public void setDifficulties(int difficulties) {
     this.difficulties = difficulties;
+  }
+
+  public void getMistakes() {
+    mistake.getMistakes();
   }
 }

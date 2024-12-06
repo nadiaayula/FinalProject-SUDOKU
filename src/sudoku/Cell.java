@@ -1,7 +1,6 @@
 package sudoku;
 import java.awt.Color;
 import java.awt.Font;
-
 import javax.swing.BorderFactory;
 import javax.swing.JTextField;
 import javax.swing.text.PlainDocument;
@@ -29,12 +28,15 @@ public class Cell extends JTextField {
     int number;
     /** The status of this cell defined in enum CellStatus */
     CellStatus status;
+    private Mistake mistake;
 
     /** Constructor */
-    public Cell(int row, int col) {
+    public Cell(int row, int col, Mistake mistake) {
         super();   // JTextField
         this.row = row;
         this.col = col;
+        this.mistake = mistake;
+
         // Inherited from JTextField: Beautify all the cells once for all
         super.setHorizontalAlignment(JTextField.CENTER);
         super.setFont(FONT_NUMBERS);
@@ -80,6 +82,11 @@ public class Cell extends JTextField {
             super.setEditable(false);
             SoundEffect.CORRECT.play();
         } else if (status == CellStatus.WRONG_GUESS) {    // from TO_GUESS
+           if (mistake != null) {
+             mistake.increment(); // Update the shared Mistake instance
+             System.out.println("Mistake updated in Cell: " + mistake.getMistakes());
+           }
+
             super.setBackground(BG_WRONG_GUESS);
             SoundEffect.WRONG.play();
         }
