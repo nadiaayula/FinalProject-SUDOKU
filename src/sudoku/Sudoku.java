@@ -110,7 +110,7 @@ public class Sudoku extends JFrame {
 
     difficulties.addActionListener(e -> {
       JComboBox<String> choice = (JComboBox<String>) e.getSource();
-      int difficulties = choice.getSelectedIndex();
+      level = choice.getSelectedIndex();
 
       // Update the timer for the new level
       remindingSeconds = getTimeForLevel(level);
@@ -206,13 +206,13 @@ public class Sudoku extends JFrame {
   private int getTimeForLevel(int level) {
     switch (level) {
       case 0:
-        return 60000;
+        return 600000;
       case 1:
-        return 48000;
+        return 480000;
       case 2:
-        return 30000;
+        return 300000;
       default:
-        return 60000;
+        return 600000;
     }
   }
 
