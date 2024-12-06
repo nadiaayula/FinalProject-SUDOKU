@@ -25,7 +25,7 @@ public class Sudoku extends JFrame {
     });
 
     // Initialize the game board
-    board = new GameBoardPanel(timer);
+    board = new GameBoardPanel(this, timer);
 
     // Configure JFrame
     Container cp = getContentPane();
@@ -58,13 +58,17 @@ public class Sudoku extends JFrame {
   }
 
   // Set menu bar and configure its actions
-  private void setMenu(MenuBar menu) {
+  public void setMenu(MenuBar menu) {
     menu.newGame.addActionListener(e -> {
+      System.out.println("masuk 1");
       board.newGame();
+      timerLabel.setText("Timer: 0 seconds");
       secondsPassed = 0;
+      timer.start();
     });
 
     menu.resetGame.addActionListener(e -> {
+      System.out.println("masuk 2");
       timerLabel.setText("Timer: 0 seconds");
       secondsPassed = 0;
       timer.start();
@@ -96,4 +100,10 @@ public class Sudoku extends JFrame {
   private void updateTimerLabel() {
     timerLabel.setText("Timer: " + secondsPassed + " seconds");
   }
+
+  public void resetTimer() {
+    secondsPassed = 0;
+    updateTimerLabel();
+    timer.restart();
+}
 }

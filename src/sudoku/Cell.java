@@ -4,6 +4,7 @@ import java.awt.Font;
 
 import javax.swing.BorderFactory;
 import javax.swing.JTextField;
+import javax.swing.text.PlainDocument;
 /**
  * The Cell class model the cells of the Sudoku puzzle, by customizing (subclass)
  * the javax.swing.JTextField to include row/column, puzzle number and status.
@@ -13,13 +14,13 @@ public class Cell extends JTextField {
 
     // Define named constants for JTextField's colors and fonts
     //  to be chosen based on CellStatus
-    public static final Color BG_GIVEN = new Color(240, 240, 240); // RGB
-    public static final Color FG_GIVEN = Color.BLACK;
-    public static final Color FG_NOT_GIVEN = Color.GRAY;
-    public static final Color BG_TO_GUESS  = Color.YELLOW;
-    public static final Color BG_CORRECT_GUESS = new Color(0, 216, 0);
-    public static final Color BG_WRONG_GUESS   = new Color(216, 0, 0);
-    public static final Font FONT_NUMBERS = new Font("OCR A Extended", Font.PLAIN, 28);
+    public static final Color BG_GIVEN = new Color(29,53,87); // RGB
+    public static final Color FG_GIVEN = new Color(241, 250, 238);
+    public static final Color FG_NOT_GIVEN = new Color(45,30,47);
+    public static final Color BG_TO_GUESS  = new Color(69, 123, 157);
+    public static final Color BG_CORRECT_GUESS = new Color(168, 218, 220);
+    public static final Color BG_WRONG_GUESS   = new Color(230, 57, 70);
+    public static final Font FONT_NUMBERS = new Font("Rubik", Font.PLAIN, 28);
 
     // Define properties (package-visible)
     /** The row and column number [0-8] of this cell */
@@ -38,6 +39,9 @@ public class Cell extends JTextField {
         super.setHorizontalAlignment(JTextField.CENTER);
         super.setFont(FONT_NUMBERS);
         setCellBorder(row, col);
+
+        PlainDocument doc = (PlainDocument) this.getDocument();
+        doc.setDocumentFilter(new DigitInputFilter());
     }
 
     private void setCellBorder(int row, int col) {
@@ -72,7 +76,7 @@ public class Cell extends JTextField {
             super.setForeground(FG_NOT_GIVEN);
         } else if (status == CellStatus.CORRECT_GUESS) {  // from TO_GUESS
             super.setBackground(BG_CORRECT_GUESS);
-            super.setForeground(FG_GIVEN);
+            super.setForeground(BG_GIVEN);
             super.setEditable(false);
             SoundEffect.CORRECT.play();
         } else if (status == CellStatus.WRONG_GUESS) {    // from TO_GUESS
