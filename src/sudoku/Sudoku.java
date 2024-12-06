@@ -14,7 +14,6 @@ public class Sudoku extends JFrame {
   private JButton btnStart;
   private JButton btnHint;
   private JButton btnNewGame;
-  private JButton btnReset;
   private JPanel btnPanel;
   private JPanel btnSubPanel1;
   private JPanel btnSubPanel2;
@@ -44,8 +43,6 @@ public class Sudoku extends JFrame {
     btnNewGame.setEnabled(false);
     btnHint = new JButton("Hint");
     btnHint.setEnabled(false);
-    btnReset = new JButton("Reset Timer");
-    btnReset.setEnabled(false);
     difficulties = new JComboBox<>(choices);
 
     // Initialize the timer outside the listener
@@ -83,7 +80,6 @@ public class Sudoku extends JFrame {
     btnStart.addActionListener(e -> {
       btnHint.setEnabled(true);
       btnNewGame.setEnabled(true);
-      btnReset.setEnabled(true);
       if (!timer.isRunning()) {
         timer.start();
       }
@@ -97,7 +93,6 @@ public class Sudoku extends JFrame {
       timer.restart();
       btnHint.setEnabled(true);
       btnNewGame.setEnabled(true);
-      btnReset.setEnabled(true);
     });
 
     btnHint.addActionListener(e -> {
@@ -111,17 +106,6 @@ public class Sudoku extends JFrame {
         btnHint.setEnabled(false);
         JOptionPane.showMessageDialog(null, "You have used all of your hints");
       }
-    });
-
-    btnReset.addActionListener(e -> {
-      board.newGame();
-      remindingSeconds = getTimeForLevel(level);
-      updateTimerLabel(remindingSeconds);
-      timer.restart();
-      hintCount = 0;
-      btnHint.setEnabled(true);
-      btnNewGame.setEnabled(true);
-      btnReset.setEnabled(true);
     });
 
     difficulties.addActionListener(e -> {
@@ -138,9 +122,8 @@ public class Sudoku extends JFrame {
     });
 
     btnSubPanel1.add(btnHint, BorderLayout.NORTH);
-    btnSubPanel1.add(btnNewGame, BorderLayout.NORTH);
     btnSubPanel1.add(btnStart, BorderLayout.NORTH);
-    btnSubPanel1.add(btnReset, BorderLayout.NORTH);
+    btnSubPanel1.add(btnNewGame, BorderLayout.NORTH);
     btnSubPanel2.add(difficulties, BorderLayout.NORTH);
     btnPanel.add(btnSubPanel1);
     btnPanel.add(btnSubPanel2);
