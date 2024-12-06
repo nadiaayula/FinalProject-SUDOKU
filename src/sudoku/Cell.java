@@ -1,16 +1,18 @@
 package sudoku;
+
 import java.awt.Color;
 import java.awt.Font;
-
 import javax.swing.BorderFactory;
 import javax.swing.JTextField;
 import javax.swing.text.PlainDocument;
+
 /**
- * The Cell class model the cells of the Sudoku puzzle, by customizing (subclass)
+ * The Cell class model the cells of the Sudoku puzzle, by customizing
+ * (subclass)
  * the javax.swing.JTextField to include row/column, puzzle number and status.
  */
 public class Cell extends JTextField {
-    private static final long serialVersionUID = 1L;  // to prevent serial warning
+  private static final long serialVersionUID = 1L; // to prevent serial warning
 
     // Define named constants for JTextField's colors and fonts
     //  to be chosen based on CellStatus
@@ -23,43 +25,43 @@ public class Cell extends JTextField {
     public static final Color BG_HIGHLIGHT = new Color(0, 180, 128);
     public static final Font FONT_NUMBERS = new Font("Rubik", Font.PLAIN, 28);
 
-    // Define properties (package-visible)
-    /** The row and column number [0-8] of this cell */
-    int row, col;
-    /** The puzzle number [1-9] for this cell */
-    int number;
-    /** The status of this cell defined in enum CellStatus */
-    CellStatus status;
+  // Define properties (package-visible)
+  /** The row and column number [0-8] of this cell */
+  int row, col;
+  /** The puzzle number [1-9] for this cell */
+  int number;
+  /** The status of this cell defined in enum CellStatus */
+  CellStatus status;
 
-    /** Constructor */
-    public Cell(int row, int col) {
-        super();   // JTextField
-        this.row = row;
-        this.col = col;
-        // Inherited from JTextField: Beautify all the cells once for all
-        super.setHorizontalAlignment(JTextField.CENTER);
-        super.setFont(FONT_NUMBERS);
-        setCellBorder(row, col);
+  /** Constructor */
+  public Cell(int row, int col) {
+    super(); // JTextField
+    this.row = row;
+    this.col = col;
+    // Inherited from JTextField: Beautify all the cells once for all
+    super.setHorizontalAlignment(JTextField.CENTER);
+    super.setFont(FONT_NUMBERS);
+    setCellBorder(row, col);
 
-        PlainDocument doc = (PlainDocument) this.getDocument();
-        doc.setDocumentFilter(new DigitInputFilter());
-    }
+    PlainDocument doc = (PlainDocument) this.getDocument();
+    doc.setDocumentFilter(new DigitInputFilter());
+  }
 
-    private void setCellBorder(int row, int col) {
-        int top = (row % 3 == 0) ? 3 : 1;
-        int left = (col % 3 == 0) ? 3 : 1;
-        int bottom = (row % 3 == 2) ? 3 : 1;
-        int right = (col % 3 == 2) ? 3 : 1;
+  private void setCellBorder(int row, int col) {
+    int top = (row % 3 == 0) ? 3 : 1;
+    int left = (col % 3 == 0) ? 3 : 1;
+    int bottom = (row % 3 == 2) ? 3 : 1;
+    int right = (col % 3 == 2) ? 3 : 1;
 
-        setBorder(BorderFactory.createMatteBorder(top, left, bottom, right, Color.BLACK));
-    }
+    setBorder(BorderFactory.createMatteBorder(top, left, bottom, right, Color.BLACK));
+  }
 
-    /** Reset this cell for a new game, given the puzzle number and isGiven */
-    public void newGame(int number, boolean isGiven) {
-        this.number = number;
-        status = isGiven ? CellStatus.GIVEN : CellStatus.TO_GUESS;
-        paint();    // paint itself
-    }
+  /** Reset this cell for a new game, given the puzzle number and isGiven */
+  public void newGame(int number, boolean isGiven) {
+    this.number = number;
+    status = isGiven ? CellStatus.GIVEN : CellStatus.TO_GUESS;
+    paint(); // paint itself
+  }
 
     /** This Cell (JTextField) paints itself based on its status */
     public void paint() {
